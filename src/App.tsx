@@ -69,7 +69,7 @@ const AboutSection: React.FC = () => (
   <section id="about" className="section about-section animate-fadeIn">
     <div className="profile-image-container">
       <img
-        src="https://media.licdn.com/dms/image/D4D03AQE8b0f9y3f3bA/profile-displayphoto-shrink_800_800/0/1683794680877?e=1728518400&v=beta&t=m6_lU0a08e1G_8a9a4d8d1f7c5a9b0c2a8c3d7e7f6e7f8e7a0d4c8e7a0" // Replace this URL with the link to your profile picture
+        src="../image/tado.png" // This line has been updated
         alt="Profile Picture"
         className="profile-image"
       />
