@@ -23,7 +23,7 @@ type Skill = {
   level: number;
 };
 
-// --- SVG Icons ---
+// --- SVG Icons (keeping all your existing icons) ---
 const AtomIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="m2 12h2" /><path d="m20 12h2" /><path d="m4.93 19.07 1.41-1.41" /><path d="m17.66 6.34 1.41-1.41" /><circle cx="12" cy="12" r="2" />
@@ -105,7 +105,7 @@ const DownloadIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-// --- Reusable Button Component ---
+// --- FIXED: Reusable Button Component with disabled prop ---
 const Button: React.FC<{ 
   children: React.ReactNode; 
   onClick?: () => void; 
@@ -113,6 +113,7 @@ const Button: React.FC<{
   type?: 'button' | 'submit' | 'reset'; 
   icon?: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'outline';
+  disabled?: boolean;  // Added disabled prop
 }> = ({
   children,
   onClick,
@@ -120,6 +121,7 @@ const Button: React.FC<{
   type = 'button',
   icon,
   variant = 'primary',
+  disabled = false,  // Default to false
 }) => {
   const variantClass = {
     primary: 'button-primary',
@@ -132,6 +134,7 @@ const Button: React.FC<{
       onClick={onClick}
       type={type}
       className={`button ${variantClass} ${className}`}
+      disabled={disabled}  // Apply disabled attribute
     >
       {children}
       {icon && <span className="button-icon">{icon}</span>}
@@ -466,7 +469,7 @@ const ContactSection: React.FC = () => {
           <Button 
             type="submit" 
             className="button-full-width"
-            disabled={formStatus === 'submitting'}
+            disabled={formStatus === 'submitting'}  // Now this will work
           >
             {formStatus === 'submitting' ? 'Sending...' : 
              formStatus === 'success' ? 'Message Sent!' : 
@@ -797,13 +800,19 @@ const App: React.FC = () => {
             gap: 0.5rem;
           }
 
+          .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+          }
+
           .button-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
           }
 
-          .button-primary:hover {
+          .button-primary:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
           }
@@ -814,7 +823,7 @@ const App: React.FC = () => {
             border: 1px solid rgba(255, 255, 255, 0.2);
           }
 
-          .button-secondary:hover {
+          .button-secondary:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.3);
           }
@@ -825,7 +834,7 @@ const App: React.FC = () => {
             border: 2px solid #667eea;
           }
 
-          .button-outline:hover {
+          .button-outline:hover:not(:disabled) {
             background: rgba(102, 126, 234, 0.1);
             transform: translateY(-2px);
           }
@@ -834,14 +843,8 @@ const App: React.FC = () => {
             transition: transform 0.3s ease;
           }
 
-          .button:hover .button-icon {
+          .button:hover:not(:disabled) .button-icon {
             transform: translateX(4px);
-          }
-
-          .button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
           }
 
           .button-full-width {
