@@ -1,12 +1,29 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-// Define a type for navigation links to ensure type safety
+// Define types
 type NavLink = {
   id: string;
   label: string;
 };
 
-// --- SVG Icons (replacing lucide-react) ---
+type Project = {
+  title: string;
+  description: string;
+  technologies: string[];
+  link?: string;
+  github?: string;
+  image?: string;
+  featured?: boolean;
+};
+
+type Skill = {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  level: number;
+};
+
+// --- SVG Icons ---
 const AtomIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="m2 12h2" /><path d="m20 12h2" /><path d="m4.93 19.07 1.41-1.41" /><path d="m17.66 6.34 1.41-1.41" /><circle cx="12" cy="12" r="2" />
@@ -43,91 +60,208 @@ const ArrowRightIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
+const GithubIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
+
+const LinkedinIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const ExternalLinkIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+    <polyline points="15 3 21 3 21 9" />
+    <line x1="10" y1="14" x2="21" y2="3" />
+  </svg>
+);
+
+const DatabaseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+    <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3" />
+  </svg>
+);
+
+const CloudIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+  </svg>
+);
+
+const DownloadIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+);
+
 // --- Reusable Button Component ---
-// A reusable button with hover effects and consistent styling
-const Button: React.FC<{ children: React.ReactNode; onClick?: () => void; className?: string; type?: 'button' | 'submit' | 'reset'; icon?: React.ReactNode }> = ({
+const Button: React.FC<{ 
+  children: React.ReactNode; 
+  onClick?: () => void; 
+  className?: string; 
+  type?: 'button' | 'submit' | 'reset'; 
+  icon?: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'outline';
+}> = ({
   children,
   onClick,
   className = '',
   type = 'button',
   icon,
-}) => (
-  <button
-    onClick={onClick}
-    type={type}
-    className={`button ${className}`}
-  >
-    {children}
-    {icon && <span className="button-icon">{icon}</span>}
-  </button>
-);
+  variant = 'primary',
+}) => {
+  const variantClass = {
+    primary: 'button-primary',
+    secondary: 'button-secondary',
+    outline: 'button-outline',
+  }[variant];
 
-// --- Sections as separate components for organization ---
-
-// About Section Component
-const AboutSection: React.FC = () => (
-  <section id="about" className="section about-section animate-fadeIn">
-    <div className="profile-image-container">
-      <img
-        src="../image/tado.png" // This line has been updated
-        alt="Profile Picture"
-        className="profile-image"
-      />
-    </div>
-    <div className="about-content">
-      <h1 className="about-heading">
-        Hi, I'm <span className="gradient-text">Tadiwanashe C Nyatowera</span>.
-      </h1>
-      <p className="about-paragraph">
-        A passionate web developer specializing in modern, responsive, and user-friendly digital experiences. I bring ideas to life with clean code and creative design.
-      </p>
-      <Button icon={<ArrowRightIcon className="icon-arrow-right" />}>Explore My Work</Button>
-    </div>
-  </section>
-);
-
-// Skills Section Component
-const SkillsSection: React.FC = () => {
-  const skills = [
-    { title: 'Web Development', description: 'HTML, CSS, JavaScript, TypeScript, React, Vue, Angular.', icon: <CodeIcon className="skill-icon" /> },
-    { title: 'UI/UX Design', description: 'Figma, Adobe XD, Sketch, User Research, Prototyping.', icon: <PaletteIcon className="skill-icon" /> },
-    { title: 'Backend', description: 'Node.js, Python, Django, REST APIs, Databases (SQL/NoSQL).', icon: <AtomIcon className="skill-icon" /> },
-    
-  ];
   return (
-    <section id="skills" className="section text-center animate-fadeIn">
-      <h2 className="section-heading gradient-text">Skills</h2>
+    <button
+      onClick={onClick}
+      type={type}
+      className={`button ${variantClass} ${className}`}
+    >
+      {children}
+      {icon && <span className="button-icon">{icon}</span>}
+    </button>
+  );
+};
+
+// --- About Section Component ---
+const AboutSection: React.FC = () => {
+  const handleDownloadCV = () => {
+    // Implement CV download
+    window.open('/cv.pdf', '_blank');
+  };
+
+  return (
+    <section id="about" className="section about-section animate-fadeIn">
+      <div className="profile-image-container">
+        <img
+          src="../image/tado.png"
+          alt="Tadiwanashe C Nyatowera"
+          className="profile-image"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = 'https://via.placeholder.com/300x300?text=TCN';
+          }}
+        />
+      </div>
+      <div className="about-content">
+        <div className="about-badge">Full-Stack Developer</div>
+        <h1 className="about-heading">
+          Hi, I'm <span className="gradient-text">Tadiwanashe C Nyatowera</span>
+        </h1>
+        <p className="about-paragraph">
+          I architect and build innovative digital solutions that solve real-world problems. 
+          With expertise in full-stack development, I transform complex requirements into 
+          elegant, scalable applications. My passion lies in creating systems that make a 
+          difference—from HR management platforms to space management solutions.
+        </p>
+        
+        <div className="stats-container">
+          <div className="stat-item">
+            <span className="stat-number">5+</span>
+            <span className="stat-label">Years Experience</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">15+</span>
+            <span className="stat-label">Projects Completed</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">10+</span>
+            <span className="stat-label">Happy Clients</span>
+          </div>
+        </div>
+
+        <div className="social-links">
+          <a href="https://github.com/tadiwanashe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
+            <GithubIcon className="social-icon" />
+          </a>
+          <a href="https://linkedin.com/in/tadiwanashe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
+            <LinkedinIcon className="social-icon" />
+          </a>
+          <Button 
+            onClick={handleDownloadCV} 
+            variant="outline" 
+            icon={<DownloadIcon width={18} height={18} />}
+            className="download-cv-btn"
+          >
+            Download CV
+          </Button>
+        </div>
+        
+        <Button icon={<ArrowRightIcon className="icon-arrow-right" />}>
+          View My Work
+        </Button>
+      </div>
+    </section>
+  );
+};
+
+// --- Skills Section Component ---
+const SkillsSection: React.FC = () => {
+  const skills: Skill[] = [
+    { 
+      title: 'Frontend Development', 
+      description: 'React, TypeScript, Next.js, Vue.js, Tailwind CSS, Material-UI', 
+      icon: <CodeIcon className="skill-icon" />,
+      level: 95
+    },
+    { 
+      title: 'UI/UX Design', 
+      description: 'Figma, Adobe XD, User Research, Wireframing, Prototyping', 
+      icon: <PaletteIcon className="skill-icon" />,
+      level: 85
+    },
+    { 
+      title: 'Backend Development', 
+      description: 'Node.js, Python, Django, REST APIs, GraphQL, Microservices', 
+      icon: <AtomIcon className="skill-icon" />,
+      level: 90
+    },
+    { 
+      title: 'Database Management', 
+      description: 'PostgreSQL, MongoDB, MySQL, Redis, Prisma, TypeORM', 
+      icon: <DatabaseIcon className="skill-icon" />,
+      level: 88
+    },
+    { 
+      title: 'DevOps & Cloud', 
+      description: 'Docker, AWS, Firebase, Vercel, CI/CD, GitHub Actions', 
+      icon: <CloudIcon className="skill-icon" />,
+      level: 82
+    }
+  ];
+
+  return (
+    <section id="skills" className="section skills-section animate-fadeIn">
+      <div className="section-header">
+        <h2 className="section-heading gradient-text">Technical Expertise</h2>
+        <p className="section-subheading">
+          Specialized in modern web technologies and best practices
+        </p>
+      </div>
       <div className="skills-grid">
         {skills.map((skill, index) => (
           <div key={index} className="skill-card">
             <div className="skill-icon-container">{skill.icon}</div>
             <h3 className="skill-title">{skill.title}</h3>
             <p className="skill-description">{skill.description}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-};
-
-// Projects Section Component
-const ProjectsSection: React.FC = () => {
-  const projects = [
-    { title: 'Mutare Dry Port HRMS', description: 'A web-based Human Resources Management System designed for the Mutare Dry Port. The platform streamlines HR operations, including employee records management, payroll processing, leave and attendance tracking, and performance appraisals. It features secure access for employees and HR administrators to manage their profiles and access relevant information.' },
-    
-  ];
-  return (
-    <section id="projects" className="section animate-fadeIn">
-      <h2 className="section-heading text-center gradient-text">Projects</h2>
-      <div className="projects-grid">
-        {projects.map((project, index) => (
-          <div key={index} className="project-card">
-            <div className="project-card-content">
-              <h3 className="project-title">{project.title}</h3>
-              <p className="project-description">{project.description}</p>
-              <a href="#" className="project-link">
-                View Project <ArrowRightIcon className="icon-arrow-right" />
-              </a>
+            <div className="skill-level">
+              <div className="skill-level-bar" style={{ width: `${skill.level}%` }}></div>
             </div>
           </div>
         ))}
@@ -136,35 +270,222 @@ const ProjectsSection: React.FC = () => {
   );
 };
 
-// Contact Section Component
-const ContactSection: React.FC = () => (
-  <section id="contact" className="section text-center animate-fadeIn">
-    <h2 className="section-heading gradient-text">Get in Touch</h2>
-    <p className="contact-description">
-      I'm always open to new opportunities and collaborations. Feel free to reach out to me via the form below.
-    </p>
-    <form className="contact-form">
-      <div className="form-group">
-        <label htmlFor="name" className="form-label">Name</label>
-        <input type="text" id="name" name="name" className="form-input" />
-      </div>
-      <div className="form-group">
-        <label htmlFor="email" className="form-label">Email</label>
-        <input type="email" id="email" name="email" className="form-input" />
-      </div>
-      <div className="form-group">
-        <label htmlFor="message" className="form-label">Message</label>
-        <textarea id="message" name="message" rows={5} className="form-textarea"></textarea>
-      </div>
-      <Button type="submit" className="button-full-width">Send Message</Button>
-    </form>
-  </section>
-);
+// --- Projects Section Component ---
+const ProjectsSection: React.FC = () => {
+  const projects: Project[] = [
+    {
+      title: 'Progression Digital Ark',
+      description: 'A cutting-edge digital platform for progression tracking and analytics. Features include real-time monitoring, predictive analytics, and comprehensive reporting tools for businesses to track their digital transformation journey.',
+      technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Docker'],
+      featured: true,
+      link: 'https://progressiondigitalark.com',
+      github: 'https://github.com/tadiwanashe/progression-digital-ark'
+    },
+    {
+      title: 'Starspace Management System',
+      description: 'An innovative space management solution for modern facilities. Implements real-time space utilization tracking, booking management, IoT integration, and advanced analytics for optimal resource allocation.',
+      technologies: ['Next.js', 'Python', 'PostgreSQL', 'WebSocket', 'Redis'],
+      featured: true,
+      link: 'https://starspace.management',
+      github: 'https://github.com/tadiwanashe/starspace'
+    },
+    {
+      title: 'Mutare Dry Port Management System',
+      description: 'Comprehensive logistics and port management platform. Handles cargo tracking, customs documentation, warehouse management, and real-time inventory monitoring. Features include automated reporting and multi-user role management.',
+      technologies: ['Vue.js', 'Django', 'PostgreSQL', 'REST API', 'Celery'],
+      featured: true,
+      link: 'https://mutaredryport.gov.zw',
+      github: 'https://github.com/tadiwanashe/mutare-dry-port'
+    },
+    {
+      title: 'Mutare Dry Port HRMS',
+      description: 'Advanced Human Resources Management System designed specifically for port operations. Streamlines employee management, payroll processing, leave tracking, and performance evaluations with secure role-based access.',
+      technologies: ['React', 'Node.js', 'Express', 'MySQL', 'JWT'],
+      featured: false,
+      link: '#',
+      github: 'https://github.com/tadiwanashe/mutare-hrms'
+    }
+  ];
 
-// The main App component
+  return (
+    <section id="projects" className="section projects-section animate-fadeIn">
+      <div className="section-header">
+        <h2 className="section-heading gradient-text">Featured Projects</h2>
+        <p className="section-subheading">
+          Innovative solutions that drive business success
+        </p>
+      </div>
+      <div className="projects-grid">
+        {projects.map((project, index) => (
+          <div key={index} className={`project-card ${project.featured ? 'featured' : ''}`}>
+            {project.featured && <div className="project-featured-badge">Featured</div>}
+            <div className="project-card-content">
+              <h3 className="project-title">{project.title}</h3>
+              <p className="project-description">{project.description}</p>
+              <div className="project-technologies">
+                {project.technologies.map((tech, i) => (
+                  <span key={i} className="technology-tag">{tech}</span>
+                ))}
+              </div>
+              <div className="project-links">
+                {project.link && project.link !== '#' && (
+                  <a href={project.link} className="project-link" target="_blank" rel="noopener noreferrer">
+                    Live Demo <ExternalLinkIcon className="icon-small" />
+                  </a>
+                )}
+                {project.github && (
+                  <a href={project.github} className="project-link" target="_blank" rel="noopener noreferrer">
+                    GitHub <GithubIcon className="icon-small" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// --- Contact Section Component ---
+const ContactSection: React.FC = () => {
+  const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormStatus('submitting');
+    
+    // Simulate API call
+    setTimeout(() => {
+      setFormStatus('success');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      setTimeout(() => setFormStatus('idle'), 3000);
+    }, 1500);
+  };
+
+  return (
+    <section id="contact" className="section contact-section animate-fadeIn">
+      <div className="section-header">
+        <h2 className="section-heading gradient-text">Let's Work Together</h2>
+        <p className="section-subheading">
+          Have a project in mind? I'd love to hear about it.
+        </p>
+      </div>
+      
+      <div className="contact-container">
+        <div className="contact-info">
+          <h3>Get in Touch</h3>
+          <p>
+            I'm always open to discussing new projects, creative ideas, or 
+            opportunities to be part of your vision.
+          </p>
+          <div className="contact-details">
+            <div className="contact-detail-item">
+              <strong>Email:</strong>
+              <a href="mailto:tadiwanashe@example.com">tadiwanashe@example.com</a>
+            </div>
+            <div className="contact-detail-item">
+              <strong>Location:</strong>
+              <span>Zimbabwe</span>
+            </div>
+            <div className="contact-detail-item">
+              <strong>Availability:</strong>
+              <span className="availability-badge">Open to opportunities</span>
+            </div>
+          </div>
+        </div>
+
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="name" className="form-label">Name</label>
+              <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                className="form-input" 
+                value={formData.name}
+                onChange={handleChange}
+                required 
+                placeholder="John Doe"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                className="form-input" 
+                value={formData.email}
+                onChange={handleChange}
+                required 
+                placeholder="john@example.com"
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="subject" className="form-label">Subject</label>
+            <input 
+              type="text" 
+              id="subject" 
+              name="subject" 
+              className="form-input" 
+              value={formData.subject}
+              onChange={handleChange}
+              required 
+              placeholder="Project Inquiry"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="message" className="form-label">Message</label>
+            <textarea 
+              id="message" 
+              name="message" 
+              rows={5} 
+              className="form-textarea" 
+              value={formData.message}
+              onChange={handleChange}
+              required 
+              placeholder="Tell me about your project..."
+            ></textarea>
+          </div>
+          <Button 
+            type="submit" 
+            className="button-full-width"
+            disabled={formStatus === 'submitting'}
+          >
+            {formStatus === 'submitting' ? 'Sending...' : 
+             formStatus === 'success' ? 'Message Sent!' : 
+             'Send Message'}
+          </Button>
+          {formStatus === 'error' && (
+            <p className="form-error">Something went wrong. Please try again.</p>
+          )}
+        </form>
+      </div>
+    </section>
+  );
+};
+
+// --- Main App Component ---
 const App: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [activeSection, setActiveSection] = useState<string>('about');
+  const [scrolled, setScrolled] = useState<boolean>(false);
 
   const navLinks: NavLink[] = useMemo(() => [
     { id: 'about', label: 'About' },
@@ -176,15 +497,28 @@ const App: React.FC = () => {
   const handleNavClick = (sectionId: string) => {
     const targetElement = document.getElementById(sectionId);
     if (targetElement) {
+      const headerOffset = 80;
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
       window.scrollTo({
-        top: targetElement.offsetTop,
+        top: offsetPosition,
         behavior: 'smooth',
       });
     }
-    setIsMobileMenuOpen(false); // Close menu on click
+    setIsMobileMenuOpen(false);
   };
 
-  // Logic to highlight the active navigation link based on scroll position
+  // Handle scroll effects
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Intersection Observer for active section
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -196,8 +530,8 @@ const App: React.FC = () => {
       },
       {
         root: null,
-        rootMargin: '0px',
-        threshold: 0.5,
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0,
       }
     );
 
@@ -222,7 +556,8 @@ const App: React.FC = () => {
     <div className="app-container">
       <style>
         {`
-          @import url('https://rsms.me/inter/inter.css');
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+          
           * {
             box-sizing: border-box;
             margin: 0;
@@ -231,32 +566,39 @@ const App: React.FC = () => {
 
           body {
             font-family: 'Inter', sans-serif;
-            background-color: #0d1117; /* A dark, GitHub-like background */
-            color: #c9d1d9; /* Light text color */
+            background-color: #0a0c10;
+            color: #e6edf3;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            scroll-behavior: smooth;
           }
 
           .app-container {
             min-height: 100vh;
-            color: #c9d1d9;
+            color: #e6edf3;
+            overflow-x: hidden;
           }
 
           .container {
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 2rem;
           }
 
-          /* --- Header & Navigation --- */
+          /* Header Styles */
           .header {
-            position: sticky;
+            position: fixed;
             top: 0;
-            z-index: 50;
-            background-color: rgba(13, 17, 23, 0.9);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: rgba(10, 12, 16, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: ${scrolled ? '0 4px 30px rgba(0, 0, 0, 0.3)' : 'none'};
             padding: 1rem 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid ${scrolled ? 'rgba(99, 102, 241, 0.2)' : 'transparent'};
           }
 
           .header-inner {
@@ -266,118 +608,168 @@ const App: React.FC = () => {
           }
 
           .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background-image: linear-gradient(to right, #6366f1, #8b5cf6);
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-decoration: none;
-            cursor: pointer;
+            letter-spacing: -0.5px;
+            transition: opacity 0.3s ease;
+          }
+
+          .logo:hover {
+            opacity: 0.8;
           }
 
           .logo-version {
-            color: #9ca3af;
+            font-weight: 400;
+            background: linear-gradient(135deg, #a8b8ff 0%, #b794f4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
           }
 
           .nav {
             display: none;
-            gap: 2rem;
-            font-size: 1.125rem;
+            gap: 2.5rem;
+            font-size: 1rem;
             font-weight: 500;
           }
 
           .nav-link {
             text-decoration: none;
-            color: #c9d1d9;
-            transition: color 0.3s ease;
+            color: #9ca3af;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+          }
+
+          .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
           }
 
           .nav-link:hover {
-            color: #6366f1;
+            color: #fff;
+          }
+
+          .nav-link:hover::after,
+          .nav-link.active::after {
+            width: 100%;
           }
 
           .nav-link.active {
-            color: #8b5cf6;
-            font-weight: bold;
+            color: #fff;
           }
 
           .mobile-menu-button {
             display: block;
             padding: 0.5rem;
             border-radius: 0.5rem;
-            background-color: transparent;
-            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            color: #fff;
           }
 
           .mobile-menu-button:hover {
-            background-color: #161b22;
+            background: rgba(255, 255, 255, 0.1);
           }
 
           .mobile-menu {
             display: none;
-            background-color: #161b22;
+            background: rgba(20, 22, 27, 0.98);
+            backdrop-filter: blur(10px);
             text-align: center;
-            padding-bottom: 1rem;
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
             max-height: 0;
             overflow: hidden;
             opacity: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
           }
 
           .mobile-menu.open {
-            display: block;
-            max-height: 500px;
+            max-height: 400px;
             opacity: 1;
           }
 
           .mobile-menu-link {
             display: block;
-            padding: 0.75rem;
+            padding: 1rem;
             font-size: 1.125rem;
             text-decoration: none;
-            color: #c9d1d9;
-            transition: background-color 0.3s ease;
+            color: #9ca3af;
+            transition: all 0.3s ease;
           }
 
           .mobile-menu-link:hover {
-            background-color: #1f242c;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
           }
 
           .mobile-menu-link.active {
-            color: #8b5cf6;
-            font-weight: bold;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
           }
 
-          /* --- Main Content & Sections --- */
+          /* Main Content */
           .main-content {
-            padding: 0 1rem;
+            padding-top: 80px;
+            min-height: 100vh;
           }
 
           .section {
-            padding: 5rem 0;
+            padding: 6rem 0;
+            scroll-margin-top: 80px;
+          }
+
+          .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+          }
+
+          .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+          }
+
+          .section-subheading {
+            font-size: 1.125rem;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
           }
 
           .divider {
             width: 100%;
             height: 1px;
-            background-color: #24292e;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
             margin: 2rem 0;
-            border-radius: 9999px;
           }
 
-          /* --- Gradient Text & Animations --- */
+          /* Gradient Text */
           .gradient-text {
-            background-image: linear-gradient(to right, #6366f1, #8b5cf6);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
           }
 
+          /* Animations */
           @keyframes fadeIn {
             from {
               opacity: 0;
-              transform: translateY(20px);
+              transform: translateY(30px);
             }
             to {
               opacity: 1;
@@ -389,32 +781,56 @@ const App: React.FC = () => {
             animation: fadeIn 1s ease-out forwards;
           }
 
-          /* --- Button --- */
+          /* Button Styles */
           .button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem 2rem;
-            background-image: linear-gradient(to bottom right, #6366f1, #8b5cf6);
-            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
             font-weight: 600;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-size: 1rem;
             transition: all 0.3s ease;
-            transform: scale(1);
             border: none;
             cursor: pointer;
             text-decoration: none;
+            gap: 0.5rem;
           }
 
-          .button:hover {
-            background-image: linear-gradient(to bottom right, #4f46e5, #7c3aed);
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          .button-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          }
+
+          .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+          }
+
+          .button-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          .button-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+          }
+
+          .button-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+          }
+
+          .button-outline:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
           }
 
           .button-icon {
-            margin-left: 0.5rem;
             transition: transform 0.3s ease;
           }
 
@@ -422,218 +838,493 @@ const App: React.FC = () => {
             transform: translateX(4px);
           }
 
+          .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+          }
+
           .button-full-width {
             width: 100%;
           }
 
-          /* --- About Section --- */
+          /* About Section */
           .about-section {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            gap: 2rem;
+            gap: 3rem;
+            min-height: calc(100vh - 80px);
           }
 
           .profile-image-container {
             position: relative;
-            width: 12rem;
-            height: 12rem;
-            border-radius: 9999px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
             overflow: hidden;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border: 4px solid rgba(139, 92, 246, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 3px solid transparent;
+            background: linear-gradient(135deg, #667eea, #764ba2) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
           }
-          
+
           .profile-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+          }
+
+          .profile-image-container:hover .profile-image {
+            transform: scale(1.1);
           }
 
           .about-content {
-            max-width: 48rem;
+            max-width: 800px;
+          }
+
+          .about-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #667eea;
+            margin-bottom: 1.5rem;
           }
 
           .about-heading {
-            font-size: 2.25rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            line-height: 1.25;
-            margin-bottom: 1rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
           }
 
           .about-paragraph {
             font-size: 1.125rem;
             color: #9ca3af;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
           }
 
-          /* --- Skills Section --- */
-          .section-heading {
-            font-size: 2.25rem;
-            font-weight: bold;
-            margin-bottom: 3rem;
+          .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+          }
+
+          .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+
+          .stat-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+          }
+
+          .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+          }
+
+          .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
+
+          .social-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+            border-color: transparent;
+          }
+
+          .social-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          .download-cv-btn {
+            height: 48px;
+          }
+
+          /* Skills Section */
+          .skills-section {
+            background: linear-gradient(to bottom, #0a0c10, #0f1117);
           }
 
           .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
           }
 
           .skill-card {
-            padding: 1.5rem;
-            background-color: #161b22;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            border: 1px solid #24292e;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
           }
 
           .skill-card:hover {
-            transform: scale(1.05);
-            border-color: #6366f1;
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.05);
           }
 
           .skill-icon-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
           }
 
           .skill-icon {
-            width: 2rem;
-            height: 2rem;
-            color: #6366f1;
+            width: 48px;
+            height: 48px;
+            color: #667eea;
           }
 
           .skill-title {
             font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #c9d1d9;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-align: center;
           }
 
           .skill-description {
             color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
           }
 
-          /* --- Projects Section --- */
+          .skill-level {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+          }
+
+          .skill-level-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 1s ease;
+          }
+
+          /* Projects Section */
           .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
           }
 
           .project-card {
             position: relative;
-            background-color: #161b22;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             overflow: hidden;
             transition: all 0.3s ease;
-            transform: translateY(0);
-            border: 1px solid #24292e;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
           }
 
           .project-card:hover {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             transform: translateY(-8px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+          }
+
+          .project-card.featured {
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            background: rgba(102, 126, 234, 0.05);
+          }
+
+          .project-featured-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+            z-index: 1;
           }
 
           .project-card-content {
-            padding: 1.5rem;
+            padding: 2rem;
           }
 
           .project-title {
             font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #c9d1d9;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
           }
 
           .project-description {
             color: #9ca3af;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+          }
+
+          .project-technologies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+          }
+
+          .technology-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+          }
+
+          .project-links {
+            display: flex;
+            gap: 1.5rem;
           }
 
           .project-link {
             display: inline-flex;
             align-items: center;
-            color: #6366f1;
+            gap: 0.25rem;
+            color: #667eea;
             font-weight: 600;
+            font-size: 0.875rem;
             text-decoration: none;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
           }
-          
+
           .project-link:hover {
-            text-decoration: underline;
+            color: #764ba2;
+            gap: 0.5rem;
           }
 
-          .project-link:hover .icon-arrow-right {
-            transform: translateX(4px);
+          .icon-small {
+            width: 16px;
+            height: 16px;
           }
 
-          /* --- Contact Section --- */
-          .contact-description {
-            font-size: 1.125rem;
+          /* Contact Section */
+          .contact-section {
+            background: linear-gradient(to bottom, #0f1117, #0a0c10);
+          }
+
+          .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 30px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .contact-info {
+            color: #fff;
+          }
+
+          .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+          }
+
+          .contact-info p {
             color: #9ca3af;
             margin-bottom: 2rem;
-            max-width: 42rem;
-            margin-left: auto;
-            margin-right: auto;
+            line-height: 1.6;
+          }
+
+          .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .contact-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+          }
+
+          .contact-detail-item strong {
+            color: #667eea;
+            font-size: 0.875rem;
+          }
+
+          .contact-detail-item a,
+          .contact-detail-item span {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+          }
+
+          .contact-detail-item a:hover {
+            color: #667eea;
+          }
+
+          .availability-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50px;
+            color: #10b981 !important;
+            font-size: 0.75rem;
           }
 
           .contact-form {
-            max-width: 36rem;
-            margin-left: auto;
-            margin-right: auto;
-            background-color: #161b22;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border: 1px solid #24292e;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+          }
+
+          .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
           }
 
           .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
           }
 
           .form-label {
-            display: block;
-            color: #c9d1d9;
-            font-weight: 600;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+          }
+
+          .form-input,
+          .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+          }
+
+          .form-input:focus,
+          .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+          }
+
+          .form-input:hover,
+          .form-textarea:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+          }
+
+          .form-input::placeholder,
+          .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+          }
+
+          .form-error {
+            color: #ef4444;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            text-align: center;
+          }
+
+          /* Footer */
+          .footer {
+            background: #05070a;
+            padding: 3rem 0;
+            text-align: center;
+            color: #9ca3af;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .footer p {
             margin-bottom: 0.5rem;
           }
 
-          .form-input, .form-textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
-            transition: border-color 0.3s ease;
+          .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
           }
 
-          .form-input:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
-          }
-          
-          /* --- Footer --- */
-          .footer {
-            background-color: #010409;
-            padding: 2rem 0;
-            text-align: center;
+          .footer-links a {
             color: #9ca3af;
-            border-top: 1px solid #24292e;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.875rem;
           }
 
-          /* --- Media Queries (for responsiveness) --- */
+          .footer-links a:hover {
+            color: #667eea;
+          }
+
+          .text-center {
+            text-align: center;
+          }
+
+          /* Media Queries */
           @media (min-width: 768px) {
             .nav {
               display: flex;
@@ -653,19 +1344,71 @@ const App: React.FC = () => {
             }
 
             .about-heading {
-                font-size: 3rem;
+              font-size: 3rem;
+            }
+
+            .stats-container {
+              justify-content: flex-start;
+            }
+
+            .social-links {
+              justify-content: flex-start;
+            }
+          }
+
+          @media (max-width: 768px) {
+            .container {
+              padding: 0 1rem;
+            }
+
+            .section {
+              padding: 4rem 0;
+            }
+
+            .section-heading {
+              font-size: 2rem;
+            }
+
+            .about-heading {
+              font-size: 2rem;
+            }
+
+            .stats-container {
+              gap: 1.5rem;
+              flex-wrap: wrap;
+            }
+
+            .stat-number {
+              font-size: 1.5rem;
+            }
+
+            .projects-grid {
+              grid-template-columns: 1fr;
+            }
+
+            .contact-container {
+              grid-template-columns: 1fr;
+              padding: 2rem;
+            }
+
+            .form-row {
+              grid-template-columns: 1fr;
             }
           }
         `}
       </style>
 
-      {/* Header & Navigation */}
+      {/* Header */}
       <header className="header">
         <div className="container header-inner">
-          <a href="#about" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} className="logo">
-            My<span className="logo-version">Portifolio</span>
+          <a 
+            href="#about" 
+            onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} 
+            className="logo"
+          >
+            TCN<span className="logo-version">.dev</span>
           </a>
-          {/* Desktop Navigation */}
+          
           <nav className="nav">
             {navLinks.map((link) => (
               <a
@@ -678,16 +1421,20 @@ const App: React.FC = () => {
               </a>
             ))}
           </nav>
-          {/* Mobile Menu Button */}
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="mobile-menu-button">
+          
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="mobile-menu-button"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
             {isMobileMenuOpen ? (
-              <XIcon className="icon" />
+              <XIcon width={24} height={24} />
             ) : (
-              <MenuIcon className="icon" />
+              <MenuIcon width={24} height={24} />
             )}
           </button>
         </div>
-        {/* Mobile Menu */}
+        
         <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
           {navLinks.map((link) => (
             <a
@@ -712,9 +1459,16 @@ const App: React.FC = () => {
         <ContactSection />
       </main>
 
-      {/* Footer */}
       <footer className="footer">
-        <p>© 2024 Vitae. All Rights Reserved.</p>
+        <div className="container">
+          <p>© {new Date().getFullYear()} Tadiwanashe C Nyatowera. All rights reserved.</p>
+          <div className="footer-links">
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
       </footer>
     </div>
   );
