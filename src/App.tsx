@@ -7,7 +7,6 @@ import {
   Palette,
   Menu,
   X,
-  ArrowRight,
   Github,
   Linkedin,
   ExternalLink,
