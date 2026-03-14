@@ -72,13 +72,13 @@ const Button: React.FC<{
       className={`button ${variantClass} ${className}`}
       disabled={disabled}
     >
-      {children}
+      <span className="button-text">{children}</span>
       {icon && <span className="button-icon">{icon}</span>}
     </button>
   );
 };
 
-// --- About Section Component (without profile image) ---
+// --- About Section Component ---
 const AboutSection: React.FC = () => {
   const handleDownloadCV = () => {
     window.open('/cv.pdf', '_blank');
@@ -509,6 +509,11 @@ const App: React.FC = () => {
             padding: 0;
           }
 
+          html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+          }
+
           body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -516,21 +521,36 @@ const App: React.FC = () => {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             line-height: 1.6;
-            scroll-behavior: smooth;
+            overflow-x: hidden;
+            width: 100%;
           }
 
           .app-container {
             min-height: 100vh;
-            color: #ffffff;
+            width: 100%;
             overflow-x: hidden;
+            color: #ffffff;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
           }
 
           .container {
+            width: 100%;
             max-width: 1280px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 640px) {
+            .container {
+              padding: 0 1.5rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .container {
+              padding: 0 2rem;
+            }
           }
 
           /* Header Styles */
@@ -542,24 +562,32 @@ const App: React.FC = () => {
             z-index: 1000;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            padding: 1rem 0;
+            padding: 0.75rem 0;
             transition: all 0.3s ease;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          @media (min-width: 768px) {
+            .header {
+              padding: 1rem 0;
+            }
           }
 
           .header-scrolled {
             background: rgba(255, 255, 255, 0.98);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 0;
           }
 
           .header-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            width: 100%;
           }
 
           .logo {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -567,6 +595,13 @@ const App: React.FC = () => {
             text-decoration: none;
             letter-spacing: -0.5px;
             transition: opacity 0.3s ease;
+            white-space: nowrap;
+          }
+
+          @media (min-width: 768px) {
+            .logo {
+              font-size: 1.75rem;
+            }
           }
 
           .logo:hover {
@@ -581,9 +616,22 @@ const App: React.FC = () => {
 
           .nav {
             display: none;
-            gap: 2.5rem;
-            font-size: 1rem;
+            gap: 1.5rem;
+            font-size: 0.95rem;
             font-weight: 500;
+          }
+
+          @media (min-width: 1024px) {
+            .nav {
+              gap: 2.5rem;
+              font-size: 1rem;
+            }
+          }
+
+          @media (min-width: 768px) {
+            .nav {
+              display: flex;
+            }
           }
 
           .nav-link {
@@ -592,6 +640,7 @@ const App: React.FC = () => {
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
+            white-space: nowrap;
           }
 
           .nav-link::after {
@@ -619,7 +668,9 @@ const App: React.FC = () => {
           }
 
           .mobile-menu-button {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 0.5rem;
             border-radius: 0.5rem;
             background: rgba(255, 255, 255, 0.2);
@@ -629,35 +680,53 @@ const App: React.FC = () => {
             color: #667eea;
           }
 
+          @media (min-width: 768px) {
+            .mobile-menu-button {
+              display: none;
+            }
+          }
+
           .mobile-menu-button:hover {
             background: rgba(255, 255, 255, 0.3);
           }
 
           .mobile-menu {
-            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             text-align: center;
-            padding: 1rem 0;
+            padding: 1rem;
             transition: all 0.3s ease;
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            z-index: 999;
+          }
+
+          @media (min-width: 768px) {
+            .mobile-menu {
+              display: none !important;
+            }
           }
 
           .mobile-menu.open {
             max-height: 400px;
             opacity: 1;
+            padding: 1rem;
           }
 
           .mobile-menu-link {
             display: block;
-            padding: 1rem;
-            font-size: 1.125rem;
+            padding: 0.75rem;
+            font-size: 1rem;
             text-decoration: none;
             color: #4a5568;
             transition: all 0.3s ease;
+            border-radius: 0.5rem;
           }
 
           .mobile-menu-link:hover {
@@ -672,40 +741,107 @@ const App: React.FC = () => {
 
           /* Main Content */
           .main-content {
-            padding-top: 80px;
+            padding-top: 64px;
             min-height: 100vh;
+            width: 100%;
+          }
+
+          @media (min-width: 768px) {
+            .main-content {
+              padding-top: 80px;
+            }
           }
 
           .section {
-            padding: 6rem 0;
-            scroll-margin-top: 80px;
+            padding: 3rem 0;
+            scroll-margin-top: 64px;
+            width: 100%;
+          }
+
+          @media (min-width: 768px) {
+            .section {
+              padding: 4rem 0;
+              scroll-margin-top: 80px;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .section {
+              padding: 6rem 0;
+            }
           }
 
           .section-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .section-header {
+              margin-bottom: 3rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .section-header {
+              margin-bottom: 4rem;
+            }
           }
 
           .section-heading {
-            font-size: 2.5rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             letter-spacing: -0.02em;
             color: #ffffff;
+            line-height: 1.2;
+          }
+
+          @media (min-width: 640px) {
+            .section-heading {
+              font-size: 2rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .section-heading {
+              font-size: 2.5rem;
+              margin-bottom: 1rem;
+            }
           }
 
           .section-subheading {
-            font-size: 1.125rem;
+            font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
             margin: 0 auto;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .section-subheading {
+              font-size: 1rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .section-subheading {
+              font-size: 1.125rem;
+            }
           }
 
           .divider {
             width: 100%;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
-            margin: 2rem 0;
+            margin: 1.5rem 0;
+          }
+
+          @media (min-width: 768px) {
+            .divider {
+              margin: 2rem 0;
+            }
           }
 
           /* Gradient Text */
@@ -720,7 +856,7 @@ const App: React.FC = () => {
           @keyframes fadeIn {
             from {
               opacity: 0;
-              transform: translateY(30px);
+              transform: translateY(20px);
             }
             to {
               opacity: 1;
@@ -729,7 +865,7 @@ const App: React.FC = () => {
           }
 
           .animate-fadeIn {
-            animation: fadeIn 1s ease-out forwards;
+            animation: fadeIn 0.8s ease-out forwards;
           }
 
           /* Button Styles */
@@ -737,15 +873,23 @@ const App: React.FC = () => {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0.75rem 1.5rem;
+            padding: 0.6rem 1.2rem;
             border-radius: 50px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             text-decoration: none;
             gap: 0.5rem;
+            white-space: nowrap;
+          }
+
+          @media (min-width: 768px) {
+            .button {
+              padding: 0.75rem 1.5rem;
+              font-size: 1rem;
+            }
           }
 
           .button:disabled {
@@ -788,6 +932,8 @@ const App: React.FC = () => {
 
           .button-icon {
             transition: transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
           }
 
           .button:hover:not(:disabled) .button-icon {
@@ -804,90 +950,209 @@ const App: React.FC = () => {
             align-items: center;
             justify-content: center;
             text-align: center;
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 64px);
+            padding: 2rem 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .about-section {
+              min-height: calc(100vh - 80px);
+              padding: 3rem 2rem;
+            }
           }
 
           .about-content {
+            width: 100%;
             max-width: 800px;
+            margin: 0 auto;
           }
 
           .about-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 50px;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #fff;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .about-badge {
+              padding: 0.5rem 1rem;
+              font-size: 0.875rem;
+              margin-bottom: 1.5rem;
+            }
           }
 
           .about-heading {
-            font-size: 2.5rem;
+            font-size: 1.75rem;
             font-weight: 800;
             line-height: 1.2;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             letter-spacing: -0.02em;
             color: #fff;
           }
 
+          @media (min-width: 640px) {
+            .about-heading {
+              font-size: 2.25rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .about-heading {
+              font-size: 3rem;
+              margin-bottom: 1.5rem;
+            }
+          }
+
           .about-paragraph {
-            font-size: 1.125rem;
+            font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
-            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .about-paragraph {
+              font-size: 1rem;
+              margin-bottom: 2rem;
+              padding: 0;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .about-paragraph {
+              font-size: 1.125rem;
+              line-height: 1.8;
+            }
           }
 
           .stats-container {
             display: flex;
             justify-content: center;
-            gap: 3rem;
-            margin-bottom: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+          }
+
+          @media (min-width: 768px) {
+            .stats-container {
+              gap: 2rem;
+              margin-bottom: 2rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .stats-container {
+              gap: 3rem;
+            }
           }
 
           .stat-item {
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-width: 80px;
           }
 
           .stat-number {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #fff;
           }
 
+          @media (min-width: 768px) {
+            .stat-number {
+              font-size: 1.75rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .stat-number {
+              font-size: 2rem;
+            }
+          }
+
           .stat-label {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+          }
+
+          @media (min-width: 768px) {
+            .stat-label {
+              font-size: 0.875rem;
+            }
           }
 
           .contact-info-cards {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .contact-info-cards {
+              gap: 1.5rem;
+              margin-bottom: 2rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .contact-info-cards {
+              gap: 2rem;
+            }
           }
 
           .contact-info-card {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50px;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
+          }
+
+          @media (min-width: 640px) {
+            .contact-info-card {
+              width: auto;
+              padding: 0.6rem 1.2rem;
+            }
+          }
+
+          @media (min-width: 768px) {
+            .contact-info-card {
+              padding: 0.75rem 1.5rem;
+            }
           }
 
           .contact-info-card a,
           .contact-info-card span {
             color: #fff;
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+            word-break: break-word;
+          }
+
+          @media (min-width: 768px) {
+            .contact-info-card a,
+            .contact-info-card span {
+              font-size: 0.95rem;
+            }
           }
 
           .contact-info-card a:hover {
@@ -896,27 +1161,42 @@ const App: React.FC = () => {
 
           .contact-icon {
             color: #fff;
+            flex-shrink: 0;
           }
 
           .social-links {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 768px) {
+            .social-links {
+              gap: 1rem;
+            }
           }
 
           .social-link {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          @media (min-width: 768px) {
+            .social-link {
+              width: 48px;
+              height: 48px;
+            }
           }
 
           .social-link:hover {
@@ -925,35 +1205,75 @@ const App: React.FC = () => {
           }
 
           .social-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
+          }
+
+          @media (min-width: 768px) {
+            .social-icon {
+              width: 24px;
+              height: 24px;
+            }
           }
 
           .download-cv-btn {
-            height: 48px;
+            height: 40px;
+          }
+
+          @media (min-width: 768px) {
+            .download-cv-btn {
+              height: 48px;
+            }
           }
 
           /* Skills Section */
           .skills-section {
             background: rgba(255, 255, 255, 0.05);
+            width: 100%;
           }
 
           .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 640px) {
+            .skills-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .skills-grid {
+              grid-template-columns: repeat(3, 1fr);
+              gap: 2rem;
+            }
           }
 
           .skill-card {
-            padding: 2rem;
+            padding: 1.5rem;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
+          }
+
+          @media (min-width: 768px) {
+            .skill-card {
+              padding: 1.75rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .skill-card {
+              padding: 2rem;
+            }
           }
 
           .skill-card:hover {
@@ -965,37 +1285,76 @@ const App: React.FC = () => {
           .skill-icon-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
           }
 
           .skill-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             color: #fff;
           }
 
+          @media (min-width: 768px) {
+            .skill-icon {
+              width: 48px;
+              height: 48px;
+            }
+          }
+
           .skill-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             color: #fff;
             text-align: center;
+          }
+
+          @media (min-width: 768px) {
+            .skill-title {
+              font-size: 1.2rem;
+              margin-bottom: 1rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .skill-title {
+              font-size: 1.25rem;
+            }
           }
 
           .skill-description {
             color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
             text-align: center;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+          }
+
+          @media (min-width: 768px) {
+            .skill-description {
+              font-size: 0.9rem;
+              margin-bottom: 1.5rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .skill-description {
+              font-size: 0.95rem;
+            }
           }
 
           .skill-level {
             width: 100%;
-            height: 6px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             overflow: hidden;
+          }
+
+          @media (min-width: 768px) {
+            .skill-level {
+              height: 6px;
+            }
           }
 
           .skill-level-bar {
@@ -1008,16 +1367,30 @@ const App: React.FC = () => {
           /* Projects Section */
           .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1rem;
+          }
+
+          @media (min-width: 640px) {
+            .projects-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .projects-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 2rem;
+            }
           }
 
           .project-card {
             position: relative;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: all 0.3s ease;
@@ -1026,9 +1399,15 @@ const App: React.FC = () => {
           }
 
           .project-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.15);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+          }
+
+          @media (min-width: 1024px) {
+            .project-card:hover {
+              transform: translateY(-8px);
+            }
           }
 
           .project-card.featured {
@@ -1038,55 +1417,130 @@ const App: React.FC = () => {
 
           .project-featured-badge {
             position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.25rem 1rem;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.2rem 0.75rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             border-radius: 50px;
             z-index: 1;
           }
 
+          @media (min-width: 768px) {
+            .project-featured-badge {
+              top: 1rem;
+              right: 1rem;
+              padding: 0.25rem 1rem;
+              font-size: 0.75rem;
+            }
+          }
+
           .project-card-content {
-            padding: 2rem;
+            padding: 1.5rem;
+          }
+
+          @media (min-width: 768px) {
+            .project-card-content {
+              padding: 1.75rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .project-card-content {
+              padding: 2rem;
+            }
           }
 
           .project-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             color: #fff;
+            padding-right: 2rem;
+          }
+
+          @media (min-width: 768px) {
+            .project-title {
+              font-size: 1.35rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .project-title {
+              font-size: 1.5rem;
+              margin-bottom: 1rem;
+            }
           }
 
           .project-description {
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+            font-size: 0.85rem;
+          }
+
+          @media (min-width: 768px) {
+            .project-description {
+              font-size: 0.9rem;
+              margin-bottom: 1.5rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .project-description {
+              font-size: 0.95rem;
+            }
           }
 
           .project-technologies {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            gap: 0.4rem;
+            margin-bottom: 1.25rem;
+          }
+
+          @media (min-width: 768px) {
+            .project-technologies {
+              gap: 0.5rem;
+              margin-bottom: 1.5rem;
+            }
           }
 
           .technology-tag {
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.6rem;
             background: rgba(255, 255, 255, 0.2);
             border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 500;
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.3);
           }
 
+          @media (min-width: 768px) {
+            .technology-tag {
+              padding: 0.25rem 0.75rem;
+              font-size: 0.7rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .technology-tag {
+              font-size: 0.75rem;
+            }
+          }
+
           .project-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+          }
+
+          @media (min-width: 768px) {
+            .project-links {
+              gap: 1.5rem;
+            }
           }
 
           .project-link {
@@ -1095,9 +1549,15 @@ const App: React.FC = () => {
             gap: 0.25rem;
             color: #fff;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             text-decoration: none;
             transition: all 0.3s ease;
+          }
+
+          @media (min-width: 768px) {
+            .project-link {
+              font-size: 0.875rem;
+            }
           }
 
           .project-link:hover {
@@ -1106,25 +1566,49 @@ const App: React.FC = () => {
           }
 
           .icon-small {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
+          }
+
+          @media (min-width: 768px) {
+            .icon-small {
+              width: 16px;
+              height: 16px;
+            }
           }
 
           /* Contact Section */
           .contact-section {
             background: rgba(255, 255, 255, 0.05);
+            width: 100%;
           }
 
           .contact-container {
             display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 3rem;
+            grid-template-columns: 1fr;
+            gap: 2rem;
             max-width: 1000px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 3rem;
+            border-radius: 20px;
+            padding: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          @media (min-width: 768px) {
+            .contact-container {
+              grid-template-columns: 1fr 1.5fr;
+              gap: 2.5rem;
+              padding: 2rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .contact-container {
+              gap: 3rem;
+              padding: 3rem;
+              border-radius: 30px;
+            }
           }
 
           .contact-info {
@@ -1132,14 +1616,41 @@ const App: React.FC = () => {
           }
 
           .contact-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+          }
+
+          @media (min-width: 768px) {
+            .contact-info h3 {
+              font-size: 1.35rem;
+              margin-bottom: 1rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .contact-info h3 {
+              font-size: 1.5rem;
+            }
           }
 
           .contact-info p {
             color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             line-height: 1.6;
+            font-size: 0.9rem;
+          }
+
+          @media (min-width: 768px) {
+            .contact-info p {
+              font-size: 0.95rem;
+              margin-bottom: 2rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .contact-info p {
+              font-size: 1rem;
+            }
           }
 
           .contact-details {
@@ -1150,20 +1661,33 @@ const App: React.FC = () => {
 
           .contact-detail-item {
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            align-items: flex-start;
+            gap: 0.75rem;
+          }
+
+          @media (min-width: 768px) {
+            .contact-detail-item {
+              gap: 1rem;
+            }
           }
 
           .contact-detail-icon {
             color: #fff;
             flex-shrink: 0;
+            margin-top: 0.2rem;
           }
 
           .contact-detail-item strong {
             color: #fff;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             display: block;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
+          }
+
+          @media (min-width: 768px) {
+            .contact-detail-item strong {
+              font-size: 0.875rem;
+            }
           }
 
           .contact-detail-item a,
@@ -1171,6 +1695,15 @@ const App: React.FC = () => {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             transition: color 0.3s ease;
+            font-size: 0.85rem;
+            word-break: break-word;
+          }
+
+          @media (min-width: 768px) {
+            .contact-detail-item a,
+            .contact-detail-item span {
+              font-size: 0.95rem;
+            }
           }
 
           .contact-detail-item a:hover {
@@ -1179,49 +1712,89 @@ const App: React.FC = () => {
 
           .availability-badge {
             display: inline-block;
-            padding: 0.25rem 0.75rem;
+            padding: 0.2rem 0.6rem;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 50px;
             color: #fff !important;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+          }
+
+          @media (min-width: 768px) {
+            .availability-badge {
+              padding: 0.25rem 0.75rem;
+              font-size: 0.75rem;
+            }
           }
 
           .contact-form {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
+          }
+
+          @media (min-width: 768px) {
+            .contact-form {
+              gap: 1.5rem;
+            }
           }
 
           .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 1rem;
+          }
+
+          @media (min-width: 640px) {
+            .form-row {
+              grid-template-columns: 1fr 1fr;
+            }
           }
 
           .form-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
+          }
+
+          @media (min-width: 768px) {
+            .form-group {
+              gap: 0.5rem;
+            }
           }
 
           .form-label {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-weight: 500;
             color: #fff;
+          }
+
+          @media (min-width: 768px) {
+            .form-label {
+              font-size: 0.875rem;
+            }
           }
 
           .form-input,
           .form-textarea {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
+          }
+
+          @media (min-width: 768px) {
+            .form-input,
+            .form-textarea {
+              padding: 0.75rem 1rem;
+              border-radius: 10px;
+              font-size: 0.95rem;
+            }
           }
 
           .form-input:focus,
@@ -1245,103 +1818,78 @@ const App: React.FC = () => {
           .form-error {
             color: #ff6b6b;
             margin-top: 0.5rem;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             text-align: center;
+          }
+
+          @media (min-width: 768px) {
+            .form-error {
+              font-size: 0.875rem;
+            }
           }
 
           /* Footer */
           .footer {
             background: rgba(0, 0, 0, 0.2);
-            padding: 3rem 0;
+            padding: 2rem 0;
             text-align: center;
             color: rgba(255, 255, 255, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
           }
 
+          @media (min-width: 768px) {
+            .footer {
+              padding: 3rem 0;
+            }
+          }
+
           .footer p {
             margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+          }
+
+          @media (min-width: 768px) {
+            .footer p {
+              font-size: 0.9rem;
+            }
+          }
+
+          @media (min-width: 1024px) {
+            .footer p {
+              font-size: 1rem;
+            }
           }
 
           .footer-links {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
+            gap: 1.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+          }
+
+          @media (min-width: 768px) {
+            .footer-links {
+              gap: 2rem;
+              margin-top: 1rem;
+            }
           }
 
           .footer-links a {
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             transition: color 0.3s ease;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
+          }
+
+          @media (min-width: 768px) {
+            .footer-links a {
+              font-size: 0.875rem;
+            }
           }
 
           .footer-links a:hover {
             color: #fff;
-          }
-
-          /* Media Queries */
-          @media (min-width: 768px) {
-            .nav {
-              display: flex;
-            }
-
-            .mobile-menu-button {
-              display: none;
-            }
-
-            .mobile-menu {
-              display: none !important;
-            }
-            
-            .about-heading {
-              font-size: 3rem;
-            }
-          }
-
-          @media (max-width: 768px) {
-            .container {
-              padding: 0 1rem;
-            }
-
-            .section {
-              padding: 4rem 0;
-            }
-
-            .section-heading {
-              font-size: 2rem;
-            }
-
-            .about-heading {
-              font-size: 2rem;
-            }
-
-            .stats-container {
-              gap: 1.5rem;
-              flex-wrap: wrap;
-            }
-
-            .stat-number {
-              font-size: 1.5rem;
-            }
-
-            .projects-grid {
-              grid-template-columns: 1fr;
-            }
-
-            .contact-container {
-              grid-template-columns: 1fr;
-              padding: 2rem;
-            }
-
-            .form-row {
-              grid-template-columns: 1fr;
-            }
-
-            .contact-info-cards {
-              flex-direction: column;
-              align-items: center;
-            }
           }
         `}
       </style>
@@ -1375,7 +1923,7 @@ const App: React.FC = () => {
             className="mobile-menu-button"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
         
@@ -1393,14 +1941,16 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="container main-content">
-        <AboutSection />
-        <div className="divider"></div>
-        <SkillsSection />
-        <div className="divider"></div>
-        <ProjectsSection />
-        <div className="divider"></div>
-        <ContactSection />
+      <main className="main-content">
+        <div className="container">
+          <AboutSection />
+          <div className="divider"></div>
+          <SkillsSection />
+          <div className="divider"></div>
+          <ProjectsSection />
+          <div className="divider"></div>
+          <ContactSection />
+        </div>
       </main>
 
       <footer className="footer">
