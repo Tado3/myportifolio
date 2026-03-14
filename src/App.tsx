@@ -1,25 +1,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
-// --- IMPORT ALL ICONS ---
-// Add these imports at the top of your file
+// --- IMPORT ALL ICONS FROM LUCIDE REACT ---
 import {
-  AtomIcon,
-  CodeIcon,
-  PaletteIcon,
-  MenuIcon,
-  XIcon,
-  ArrowRightIcon,
-  GithubIcon,
-  LinkedinIcon,
-  ExternalLinkIcon,
-  DatabaseIcon,
-  CloudIcon,
-  DownloadIcon
-} from 'lucide-react';  // If using lucide-react
+  Atom,
+  Code,
+  Palette,
+  Menu,
+  X,
+  ArrowRight,
+  Github,
+  Linkedin,
+  ExternalLink,
+  Database,
+  Cloud,
+  Download
+} from 'lucide-react';
 
-// OR if you're using your custom SVG icons, make sure they're exported properly
-
-// Define types (keep your existing type definitions)
+// Define types
 type NavLink = {
   id: string;
   label: string;
@@ -42,7 +39,7 @@ type Skill = {
   level: number;
 };
 
-// --- FIXED: Button Component with proper export ---
+// --- Button Component ---
 const Button: React.FC<{ 
   children: React.ReactNode; 
   onClick?: () => void; 
@@ -79,7 +76,7 @@ const Button: React.FC<{
   );
 };
 
-// --- FIXED: About Section Component (make sure it's defined before App) ---
+// --- About Section Component ---
 const AboutSection: React.FC = () => {
   const handleDownloadCV = () => {
     window.open('/cv.pdf', '_blank');
@@ -106,7 +103,8 @@ const AboutSection: React.FC = () => {
         <p className="about-paragraph">
           I architect and build innovative digital solutions that solve real-world problems. 
           With expertise in full-stack development, I transform complex requirements into 
-          elegant, scalable applications.
+          elegant, scalable applications. My passion lies in creating systems that make a 
+          difference—from HR management platforms to space management solutions.
         </p>
         
         <div className="stats-container">
@@ -126,22 +124,22 @@ const AboutSection: React.FC = () => {
 
         <div className="social-links">
           <a href="https://github.com/tadiwanashe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
-            <GithubIcon className="social-icon" />
+            <Github className="social-icon" size={24} />
           </a>
           <a href="https://linkedin.com/in/tadiwanashe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn">
-            <LinkedinIcon className="social-icon" />
+            <Linkedin className="social-icon" size={24} />
           </a>
           <Button 
             onClick={handleDownloadCV} 
             variant="outline" 
-            icon={<DownloadIcon width={18} height={18} />}
+            icon={<Download size={18} />}
             className="download-cv-btn"
           >
             Download CV
           </Button>
         </div>
         
-        <Button icon={<ArrowRightIcon className="icon-arrow-right" />}>
+        <Button icon={<ArrowRight className="icon-arrow-right" size={18} />}>
           View My Work
         </Button>
       </div>
@@ -154,32 +152,32 @@ const SkillsSection: React.FC = () => {
   const skills: Skill[] = [
     { 
       title: 'Frontend Development', 
-      description: 'React, TypeScript, Next.js, Vue.js, Tailwind CSS', 
-      icon: <CodeIcon className="skill-icon" />,
+      description: 'React, TypeScript, Next.js, Vue.js, Tailwind CSS, Material-UI', 
+      icon: <Code className="skill-icon" size={48} />,
       level: 95
     },
     { 
       title: 'UI/UX Design', 
-      description: 'Figma, Adobe XD, User Research, Wireframing', 
-      icon: <PaletteIcon className="skill-icon" />,
+      description: 'Figma, Adobe XD, User Research, Wireframing, Prototyping', 
+      icon: <Palette className="skill-icon" size={48} />,
       level: 85
     },
     { 
       title: 'Backend Development', 
-      description: 'Node.js, Python, Django, REST APIs, GraphQL', 
-      icon: <AtomIcon className="skill-icon" />,
+      description: 'Node.js, Python, Django, REST APIs, GraphQL, Microservices', 
+      icon: <Atom className="skill-icon" size={48} />,
       level: 90
     },
     { 
       title: 'Database Management', 
-      description: 'PostgreSQL, MongoDB, MySQL, Redis', 
-      icon: <DatabaseIcon className="skill-icon" />,
+      description: 'PostgreSQL, MongoDB, MySQL, Redis, Prisma, TypeORM', 
+      icon: <Database className="skill-icon" size={48} />,
       level: 88
     },
     { 
       title: 'DevOps & Cloud', 
-      description: 'Docker, AWS, Firebase, Vercel, CI/CD', 
-      icon: <CloudIcon className="skill-icon" />,
+      description: 'Docker, AWS, Firebase, Vercel, CI/CD, GitHub Actions', 
+      icon: <Cloud className="skill-icon" size={48} />,
       level: 82
     }
   ];
@@ -213,7 +211,7 @@ const ProjectsSection: React.FC = () => {
   const projects: Project[] = [
     {
       title: 'Progression Digital Ark',
-      description: 'A cutting-edge digital platform for progression tracking and analytics.',
+      description: 'A cutting-edge digital platform for progression tracking and analytics. Features include real-time monitoring, predictive analytics, and comprehensive reporting tools for businesses to track their digital transformation journey.',
       technologies: ['React', 'TypeScript', 'Node.js', 'MongoDB', 'Docker'],
       featured: true,
       link: 'https://progressiondigitalark.com',
@@ -221,7 +219,7 @@ const ProjectsSection: React.FC = () => {
     },
     {
       title: 'Starspace Management System',
-      description: 'An innovative space management solution for modern facilities.',
+      description: 'An innovative space management solution for modern facilities. Implements real-time space utilization tracking, booking management, IoT integration, and advanced analytics for optimal resource allocation.',
       technologies: ['Next.js', 'Python', 'PostgreSQL', 'WebSocket', 'Redis'],
       featured: true,
       link: 'https://starspace.management',
@@ -229,7 +227,7 @@ const ProjectsSection: React.FC = () => {
     },
     {
       title: 'Mutare Dry Port Management System',
-      description: 'Comprehensive logistics and port management platform.',
+      description: 'Comprehensive logistics and port management platform. Handles cargo tracking, customs documentation, warehouse management, and real-time inventory monitoring. Features include automated reporting and multi-user role management.',
       technologies: ['Vue.js', 'Django', 'PostgreSQL', 'REST API', 'Celery'],
       featured: true,
       link: 'https://mutaredryport.gov.zw',
@@ -237,7 +235,7 @@ const ProjectsSection: React.FC = () => {
     },
     {
       title: 'Mutare Dry Port HRMS',
-      description: 'Advanced Human Resources Management System.',
+      description: 'Advanced Human Resources Management System designed specifically for port operations. Streamlines employee management, payroll processing, leave tracking, and performance evaluations with secure role-based access.',
       technologies: ['React', 'Node.js', 'Express', 'MySQL', 'JWT'],
       featured: false,
       github: 'https://github.com/tadiwanashe/mutare-hrms'
@@ -267,12 +265,12 @@ const ProjectsSection: React.FC = () => {
               <div className="project-links">
                 {project.link && (
                   <a href={project.link} className="project-link" target="_blank" rel="noopener noreferrer">
-                    Live Demo <ExternalLinkIcon className="icon-small" />
+                    Live Demo <ExternalLink className="icon-small" size={16} />
                   </a>
                 )}
                 {project.github && (
                   <a href={project.github} className="project-link" target="_blank" rel="noopener noreferrer">
-                    GitHub <GithubIcon className="icon-small" />
+                    GitHub <Github className="icon-small" size={16} />
                   </a>
                 )}
               </div>
@@ -305,6 +303,7 @@ const ContactSection: React.FC = () => {
     e.preventDefault();
     setFormStatus('submitting');
     
+    // Simulate API call
     setTimeout(() => {
       setFormStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -417,7 +416,7 @@ const ContactSection: React.FC = () => {
   );
 };
 
-// --- FIXED: Main App Component with default export ---
+// --- Main App Component ---
 const App: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [activeSection, setActiveSection] = useState<string>('about');
@@ -445,6 +444,7 @@ const App: React.FC = () => {
     setIsMobileMenuOpen(false);
   };
 
+  // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -453,6 +453,7 @@ const App: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Intersection Observer for active section
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -488,10 +489,857 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Keep all your existing styles here */}
-      <style>{/* Your CSS styles */}</style>
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+          
+          * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+          }
 
-      <header className="header">
+          body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0c10;
+            color: #e6edf3;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+          }
+
+          .app-container {
+            min-height: 100vh;
+            color: #e6edf3;
+            overflow-x: hidden;
+          }
+
+          .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+          }
+
+          /* Header Styles */
+          .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background-color: rgba(10, 12, 16, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid transparent;
+          }
+
+          .header-scrolled {
+            background: rgba(10, 12, 16, 0.98);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+          }
+
+          .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            transition: opacity 0.3s ease;
+          }
+
+          .logo:hover {
+            opacity: 0.8;
+          }
+
+          .logo-version {
+            font-weight: 400;
+            background: linear-gradient(135deg, #a8b8ff 0%, #b794f4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+
+          .nav {
+            display: none;
+            gap: 2.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
+          .nav-link {
+            text-decoration: none;
+            color: #9ca3af;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+          }
+
+          .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+          }
+
+          .nav-link:hover {
+            color: #fff;
+          }
+
+          .nav-link:hover::after,
+          .nav-link.active::after {
+            width: 100%;
+          }
+
+          .nav-link.active {
+            color: #fff;
+          }
+
+          .mobile-menu-button {
+            display: block;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+          }
+
+          .mobile-menu-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+          }
+
+          .mobile-menu {
+            display: none;
+            background: rgba(20, 22, 27, 0.98);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+          }
+
+          .mobile-menu.open {
+            max-height: 400px;
+            opacity: 1;
+          }
+
+          .mobile-menu-link {
+            display: block;
+            padding: 1rem;
+            font-size: 1.125rem;
+            text-decoration: none;
+            color: #9ca3af;
+            transition: all 0.3s ease;
+          }
+
+          .mobile-menu-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+          }
+
+          .mobile-menu-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+          }
+
+          /* Main Content */
+          .main-content {
+            padding-top: 80px;
+            min-height: 100vh;
+          }
+
+          .section {
+            padding: 6rem 0;
+            scroll-margin-top: 80px;
+          }
+
+          .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+          }
+
+          .section-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+          }
+
+          .section-subheading {
+            font-size: 1.125rem;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto;
+          }
+
+          .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+            margin: 2rem 0;
+          }
+
+          /* Gradient Text */
+          .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+
+          /* Animations */
+          @keyframes fadeIn {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+          }
+
+          /* Button Styles */
+          .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            gap: 0.5rem;
+          }
+
+          .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+          }
+
+          .button-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          }
+
+          .button-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+          }
+
+          .button-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          .button-secondary:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+          }
+
+          .button-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+          }
+
+          .button-outline:hover:not(:disabled) {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+          }
+
+          .button-icon {
+            transition: transform 0.3s ease;
+          }
+
+          .button:hover:not(:disabled) .button-icon {
+            transform: translateX(4px);
+          }
+
+          .button-full-width {
+            width: 100%;
+          }
+
+          /* About Section */
+          .about-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 3rem;
+            min-height: calc(100vh - 80px);
+          }
+
+          .profile-image-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border: 3px solid transparent;
+            background: linear-gradient(135deg, #667eea, #764ba2) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+          }
+
+          .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+          }
+
+          .profile-image-container:hover .profile-image {
+            transform: scale(1.1);
+          }
+
+          .about-content {
+            max-width: 800px;
+          }
+
+          .about-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+          }
+
+          .about-heading {
+            font-size: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+          }
+
+          .about-paragraph {
+            font-size: 1.125rem;
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+          }
+
+          .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+          }
+
+          .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          }
+
+          .stat-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+          }
+
+          .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+          }
+
+          .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
+
+          .social-link:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+            border-color: transparent;
+          }
+
+          .social-icon {
+            width: 24px;
+            height: 24px;
+          }
+
+          .download-cv-btn {
+            height: 48px;
+          }
+
+          /* Skills Section */
+          .skills-section {
+            background: linear-gradient(to bottom, #0a0c10, #0f1117);
+          }
+
+          .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+          }
+
+          .skill-card {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+          }
+
+          .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+          }
+
+          .skill-icon-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+          }
+
+          .skill-icon {
+            width: 48px;
+            height: 48px;
+            color: #667eea;
+          }
+
+          .skill-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-align: center;
+          }
+
+          .skill-description {
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+          }
+
+          .skill-level {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+          }
+
+          .skill-level-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 1s ease;
+          }
+
+          /* Projects Section */
+          .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+          }
+
+          .project-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+          }
+
+          .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+          }
+
+          .project-card.featured {
+            border: 2px solid rgba(102, 126, 234, 0.5);
+            background: rgba(102, 126, 234, 0.05);
+          }
+
+          .project-featured-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+            z-index: 1;
+          }
+
+          .project-card-content {
+            padding: 2rem;
+          }
+
+          .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+          }
+
+          .project-description {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+          }
+
+          .project-technologies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+          }
+
+          .technology-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+          }
+
+          .project-links {
+            display: flex;
+            gap: 1.5rem;
+          }
+
+          .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+          }
+
+          .project-link:hover {
+            color: #764ba2;
+            gap: 0.5rem;
+          }
+
+          .icon-small {
+            width: 16px;
+            height: 16px;
+          }
+
+          /* Contact Section */
+          .contact-section {
+            background: linear-gradient(to bottom, #0f1117, #0a0c10);
+          }
+
+          .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 30px;
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .contact-info {
+            color: #fff;
+          }
+
+          .contact-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+          }
+
+          .contact-info p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+          }
+
+          .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+
+          .contact-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+          }
+
+          .contact-detail-item strong {
+            color: #667eea;
+            font-size: 0.875rem;
+          }
+
+          .contact-detail-item a,
+          .contact-detail-item span {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+          }
+
+          .contact-detail-item a:hover {
+            color: #667eea;
+          }
+
+          .availability-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50px;
+            color: #10b981 !important;
+            font-size: 0.75rem;
+          }
+
+          .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+          }
+
+          .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+          }
+
+          .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #fff;
+          }
+
+          .form-input,
+          .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+          }
+
+          .form-input:focus,
+          .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+          }
+
+          .form-input:hover,
+          .form-textarea:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+          }
+
+          .form-input::placeholder,
+          .form-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+          }
+
+          .form-error {
+            color: #ef4444;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            text-align: center;
+          }
+
+          /* Footer */
+          .footer {
+            background: #05070a;
+            padding: 3rem 0;
+            text-align: center;
+            color: #9ca3af;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          .footer p {
+            margin-bottom: 0.5rem;
+          }
+
+          .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+          }
+
+          .footer-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.875rem;
+          }
+
+          .footer-links a:hover {
+            color: #667eea;
+          }
+
+          .text-center {
+            text-align: center;
+          }
+
+          /* Media Queries */
+          @media (min-width: 768px) {
+            .nav {
+              display: flex;
+            }
+
+            .mobile-menu-button {
+              display: none;
+            }
+
+            .mobile-menu {
+              display: none !important;
+            }
+            
+            .about-section {
+              flex-direction: row;
+              text-align: left;
+            }
+
+            .about-heading {
+              font-size: 3rem;
+            }
+
+            .stats-container {
+              justify-content: flex-start;
+            }
+
+            .social-links {
+              justify-content: flex-start;
+            }
+          }
+
+          @media (max-width: 768px) {
+            .container {
+              padding: 0 1rem;
+            }
+
+            .section {
+              padding: 4rem 0;
+            }
+
+            .section-heading {
+              font-size: 2rem;
+            }
+
+            .about-heading {
+              font-size: 2rem;
+            }
+
+            .stats-container {
+              gap: 1.5rem;
+              flex-wrap: wrap;
+            }
+
+            .stat-number {
+              font-size: 1.5rem;
+            }
+
+            .projects-grid {
+              grid-template-columns: 1fr;
+            }
+
+            .contact-container {
+              grid-template-columns: 1fr;
+              padding: 2rem;
+            }
+
+            .form-row {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}
+      </style>
+
+      {/* Header */}
+      <header className={`header ${scrolled ? 'header-scrolled' : ''}`}>
         <div className="container header-inner">
           <a 
             href="#about" 
@@ -519,7 +1367,7 @@ const App: React.FC = () => {
             className="mobile-menu-button"
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            {isMobileMenuOpen ? <XIcon /> : <MenuIcon />}
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
         
@@ -562,5 +1410,4 @@ const App: React.FC = () => {
   );
 };
 
-// --- FIXED: Add default export ---
 export default App;
