@@ -109,15 +109,15 @@ const AboutSection: React.FC = () => {
         
         <div className="stats-container">
           <div className="stat-item">
-            <span className="stat-number">5+</span>
+            <span className="stat-number">2+</span>
             <span className="stat-label">Years Experience</span>
           </div>
           <div className="stat-item">
-            <span className="stat-number">15+</span>
+            <span className="stat-number">3</span>
             <span className="stat-label">Projects Completed</span>
           </div>
           <div className="stat-item">
-            <span className="stat-number">10+</span>
+            <span className="stat-number">3</span>
             <span className="stat-label">Happy Clients</span>
           </div>
         </div>
@@ -158,7 +158,7 @@ const SkillsSection: React.FC = () => {
     },
     { 
       title: 'UI/UX Design', 
-      description: 'Figma, Adobe XD, User Research, Wireframing, Prototyping', 
+      description: 'Figma, Adobe XD, User Research, Prototyping', 
       icon: <Palette className="skill-icon" size={48} />,
       level: 85
     },
@@ -170,13 +170,13 @@ const SkillsSection: React.FC = () => {
     },
     { 
       title: 'Database Management', 
-      description: 'PostgreSQL, MongoDB, MySQL, Redis, Prisma, TypeORM', 
+      description: 'PostgreSQL, MongoDB, MySQL', 
       icon: <Database className="skill-icon" size={48} />,
       level: 88
     },
     { 
       title: 'DevOps & Cloud', 
-      description: 'Docker, AWS, Firebase, Vercel, CI/CD, GitHub Actions', 
+      description: 'AWS, Firebase, Vercel, CI/CD, GitHub Actions', 
       icon: <Cloud className="skill-icon" size={48} />,
       level: 82
     }
@@ -220,9 +220,9 @@ const ProjectsSection: React.FC = () => {
     {
       title: 'Starspace Management System',
       description: 'An innovative space management solution for modern facilities. Implements real-time space utilization tracking, booking management, IoT integration, and advanced analytics for optimal resource allocation.',
-      technologies: ['Next.js', 'Python', 'PostgreSQL', 'WebSocket', 'Redis'],
+      technologies: ['Next.js', 'Python', 'PostgreSQL', 'WebSocket', 'Javascript'],
       featured: true,
-      link: 'https://starspace.management',
+      link: 'https://starspace.co.zw',
       github: 'https://github.com/tadiwanashe/starspace'
     },
     {
@@ -230,7 +230,7 @@ const ProjectsSection: React.FC = () => {
       description: 'Comprehensive logistics and port management platform. Handles cargo tracking, customs documentation, warehouse management, and real-time inventory monitoring. Features include automated reporting and multi-user role management.',
       technologies: ['Vue.js', 'Django', 'PostgreSQL', 'REST API', 'Celery'],
       featured: true,
-      link: 'https://mutaredryport.gov.zw',
+      link: 'https://',
       github: 'https://github.com/tadiwanashe/mutare-dry-port'
     },
     {
@@ -330,7 +330,7 @@ const ContactSection: React.FC = () => {
           <div className="contact-details">
             <div className="contact-detail-item">
               <strong>Email:</strong>
-              <a href="mailto:tadiwanashe@example.com">tadiwanashe@example.com</a>
+              <a href="mailto:nyamutoweratadiwanashe@gmail.com">nyamutoweratadiwanashe@gmail.com</a>
             </div>
             <div className="contact-detail-item">
               <strong>Location:</strong>
