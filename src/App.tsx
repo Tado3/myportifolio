@@ -13,7 +13,10 @@ import {
   ExternalLink,
   Database,
   Cloud,
-  Download
+  Download,
+  Mail,
+  MapPin,
+  Briefcase
 } from 'lucide-react';
 
 // Define types
@@ -76,7 +79,7 @@ const Button: React.FC<{
   );
 };
 
-// --- About Section Component ---
+// --- About Section Component (without profile image) ---
 const AboutSection: React.FC = () => {
   const handleDownloadCV = () => {
     window.open('/cv.pdf', '_blank');
@@ -84,19 +87,11 @@ const AboutSection: React.FC = () => {
 
   return (
     <section id="about" className="section about-section animate-fadeIn">
-      <div className="profile-image-container">
-        <img
-          src="/image/tado.png"
-          alt="Tadiwanashe C Nyatowera"
-          className="profile-image"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = 'https://via.placeholder.com/300x300?text=TCN';
-          }}
-        />
-      </div>
       <div className="about-content">
-        <div className="about-badge">Full-Stack Developer</div>
+        <div className="about-badge">
+          <Briefcase size={16} />
+          <span>Full-Stack Developer</span>
+        </div>
         <h1 className="about-heading">
           Hi, I'm <span className="gradient-text">Tadiwanashe C Nyatowera</span>
         </h1>
@@ -122,6 +117,17 @@ const AboutSection: React.FC = () => {
           </div>
         </div>
 
+        <div className="contact-info-cards">
+          <div className="contact-info-card">
+            <Mail className="contact-icon" size={20} />
+            <a href="mailto:nyamutoweratadiwanashe@gmail.com">nyamutoweratadiwanashe@gmail.com</a>
+          </div>
+          <div className="contact-info-card">
+            <MapPin className="contact-icon" size={20} />
+            <span>Zimbabwe</span>
+          </div>
+        </div>
+
         <div className="social-links">
           <a href="https://github.com/tadiwanashe" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub">
             <Github className="social-icon" size={24} />
@@ -138,10 +144,6 @@ const AboutSection: React.FC = () => {
             Download CV
           </Button>
         </div>
-        
-        <Button icon={<ArrowRight className="icon-arrow-right" size={18} />}>
-          View My Work
-        </Button>
       </div>
     </section>
   );
@@ -329,16 +331,25 @@ const ContactSection: React.FC = () => {
           </p>
           <div className="contact-details">
             <div className="contact-detail-item">
-              <strong>Email:</strong>
-              <a href="mailto:nyamutoweratadiwanashe@gmail.com">nyamutoweratadiwanashe@gmail.com</a>
+              <Mail className="contact-detail-icon" size={20} />
+              <div>
+                <strong>Email:</strong>
+                <a href="mailto:nyamutoweratadiwanashe@gmail.com">nyamutoweratadiwanashe@gmail.com</a>
+              </div>
             </div>
             <div className="contact-detail-item">
-              <strong>Location:</strong>
-              <span>Zimbabwe</span>
+              <MapPin className="contact-detail-icon" size={20} />
+              <div>
+                <strong>Location:</strong>
+                <span>Zimbabwe</span>
+              </div>
             </div>
             <div className="contact-detail-item">
-              <strong>Availability:</strong>
-              <span className="availability-badge">Open to opportunities</span>
+              <Briefcase className="contact-detail-icon" size={20} />
+              <div>
+                <strong>Availability:</strong>
+                <span className="availability-badge">Open to opportunities</span>
+              </div>
             </div>
           </div>
         </div>
@@ -501,8 +512,8 @@ const App: React.FC = () => {
 
           body {
             font-family: 'Inter', sans-serif;
-            background-color: #0a0c10;
-            color: #e6edf3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             line-height: 1.6;
@@ -511,8 +522,10 @@ const App: React.FC = () => {
 
           .app-container {
             min-height: 100vh;
-            color: #e6edf3;
+            color: #ffffff;
             overflow-x: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
           }
 
           .container {
@@ -528,17 +541,16 @@ const App: React.FC = () => {
             left: 0;
             right: 0;
             z-index: 1000;
-            background-color: rgba(10, 12, 16, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             padding: 1rem 0;
             transition: all 0.3s ease;
-            border-bottom: 1px solid transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
           }
 
           .header-scrolled {
-            background: rgba(10, 12, 16, 0.98);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
           }
 
           .header-inner {
@@ -564,9 +576,8 @@ const App: React.FC = () => {
 
           .logo-version {
             font-weight: 400;
-            background: linear-gradient(135deg, #a8b8ff 0%, #b794f4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #667eea;
+            -webkit-text-fill-color: #667eea;
           }
 
           .nav {
@@ -578,7 +589,7 @@ const App: React.FC = () => {
 
           .nav-link {
             text-decoration: none;
-            color: #9ca3af;
+            color: #4a5568;
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
@@ -596,7 +607,7 @@ const App: React.FC = () => {
           }
 
           .nav-link:hover {
-            color: #fff;
+            color: #667eea;
           }
 
           .nav-link:hover::after,
@@ -605,27 +616,27 @@ const App: React.FC = () => {
           }
 
           .nav-link.active {
-            color: #fff;
+            color: #667eea;
           }
 
           .mobile-menu-button {
             display: block;
             padding: 0.5rem;
             border-radius: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #fff;
+            color: #667eea;
           }
 
           .mobile-menu-button:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.3);
           }
 
           .mobile-menu {
             display: none;
-            background: rgba(20, 22, 27, 0.98);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
             text-align: center;
             padding: 1rem 0;
@@ -633,7 +644,7 @@ const App: React.FC = () => {
             max-height: 0;
             overflow: hidden;
             opacity: 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
           }
 
           .mobile-menu.open {
@@ -646,13 +657,13 @@ const App: React.FC = () => {
             padding: 1rem;
             font-size: 1.125rem;
             text-decoration: none;
-            color: #9ca3af;
+            color: #4a5568;
             transition: all 0.3s ease;
           }
 
           .mobile-menu-link:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
           }
 
           .mobile-menu-link.active {
@@ -681,11 +692,12 @@ const App: React.FC = () => {
             font-weight: 800;
             margin-bottom: 1rem;
             letter-spacing: -0.02em;
+            color: #ffffff;
           }
 
           .section-subheading {
             font-size: 1.125rem;
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
             margin: 0 auto;
           }
@@ -693,13 +705,13 @@ const App: React.FC = () => {
           .divider {
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
             margin: 2rem 0;
           }
 
           /* Gradient Text */
           .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -746,33 +758,32 @@ const App: React.FC = () => {
           .button-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
           }
 
           .button-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
           }
 
           .button-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
           }
 
           .button-secondary:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.3);
           }
 
           .button-outline {
             background: transparent;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #fff;
+            border: 2px solid #fff;
           }
 
           .button-outline:hover:not(:disabled) {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
           }
 
@@ -791,38 +802,10 @@ const App: React.FC = () => {
           /* About Section */
           .about-section {
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            gap: 3rem;
             min-height: calc(100vh - 80px);
-          }
-
-          .profile-image-container {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            border: 3px solid transparent;
-            background: linear-gradient(135deg, #667eea, #764ba2) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-          }
-
-          .profile-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-          }
-
-          .profile-image-container:hover .profile-image {
-            transform: scale(1.1);
           }
 
           .about-content {
@@ -830,14 +813,16 @@ const App: React.FC = () => {
           }
 
           .about-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 50px;
             font-size: 0.875rem;
             font-weight: 500;
-            color: #667eea;
+            color: #fff;
             margin-bottom: 1.5rem;
           }
 
@@ -847,11 +832,12 @@ const App: React.FC = () => {
             line-height: 1.2;
             margin-bottom: 1.5rem;
             letter-spacing: -0.02em;
+            color: #fff;
           }
 
           .about-paragraph {
             font-size: 1.125rem;
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 2rem;
             line-height: 1.8;
           }
@@ -872,14 +858,45 @@ const App: React.FC = () => {
           .stat-number {
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
           }
 
           .stat-label {
             font-size: 0.875rem;
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
+          }
+
+          .contact-info-cards {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+          }
+
+          .contact-info-card {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+          }
+
+          .contact-info-card a,
+          .contact-info-card span {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+          }
+
+          .contact-info-card a:hover {
+            text-decoration: underline;
+          }
+
+          .contact-icon {
+            color: #fff;
           }
 
           .social-links {
@@ -887,7 +904,6 @@ const App: React.FC = () => {
             justify-content: center;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 2rem;
             flex-wrap: wrap;
           }
 
@@ -898,16 +914,15 @@ const App: React.FC = () => {
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
           }
 
           .social-link:hover {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
-            border-color: transparent;
           }
 
           .social-icon {
@@ -921,7 +936,7 @@ const App: React.FC = () => {
 
           /* Skills Section */
           .skills-section {
-            background: linear-gradient(to bottom, #0a0c10, #0f1117);
+            background: rgba(255, 255, 255, 0.05);
           }
 
           .skills-grid {
@@ -934,19 +949,18 @@ const App: React.FC = () => {
 
           .skill-card {
             padding: 2rem;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
           }
 
           .skill-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(102, 126, 234, 0.3);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
           }
 
           .skill-icon-container {
@@ -958,7 +972,7 @@ const App: React.FC = () => {
           .skill-icon {
             width: 48px;
             height: 48px;
-            color: #667eea;
+            color: #fff;
           }
 
           .skill-title {
@@ -970,7 +984,7 @@ const App: React.FC = () => {
           }
 
           .skill-description {
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             line-height: 1.6;
             margin-bottom: 1.5rem;
             text-align: center;
@@ -980,14 +994,14 @@ const App: React.FC = () => {
           .skill-level {
             width: 100%;
             height: 6px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             overflow: hidden;
           }
 
           .skill-level-bar {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #fff, #f0f0f0);
             border-radius: 10px;
             transition: width 1s ease;
           }
@@ -1003,24 +1017,24 @@ const App: React.FC = () => {
 
           .project-card {
             position: relative;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
           }
 
           .project-card:hover {
             transform: translateY(-8px);
-            border-color: rgba(102, 126, 234, 0.3);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
           }
 
           .project-card.featured {
-            border: 2px solid rgba(102, 126, 234, 0.5);
-            background: rgba(102, 126, 234, 0.05);
+            border: 2px solid #fff;
+            background: rgba(255, 255, 255, 0.15);
           }
 
           .project-featured-badge {
@@ -1048,7 +1062,7 @@ const App: React.FC = () => {
           }
 
           .project-description {
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 1.5rem;
             line-height: 1.6;
             font-size: 0.95rem;
@@ -1063,12 +1077,12 @@ const App: React.FC = () => {
 
           .technology-tag {
             padding: 0.25rem 0.75rem;
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50px;
             font-size: 0.75rem;
             font-weight: 500;
-            color: #667eea;
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
           }
 
           .project-links {
@@ -1080,7 +1094,7 @@ const App: React.FC = () => {
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            color: #667eea;
+            color: #fff;
             font-weight: 600;
             font-size: 0.875rem;
             text-decoration: none;
@@ -1088,7 +1102,7 @@ const App: React.FC = () => {
           }
 
           .project-link:hover {
-            color: #764ba2;
+            color: #f0f0f0;
             gap: 0.5rem;
           }
 
@@ -1099,7 +1113,7 @@ const App: React.FC = () => {
 
           /* Contact Section */
           .contact-section {
-            background: linear-gradient(to bottom, #0f1117, #0a0c10);
+            background: rgba(255, 255, 255, 0.05);
           }
 
           .contact-container {
@@ -1108,10 +1122,10 @@ const App: React.FC = () => {
             gap: 3rem;
             max-width: 1000px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 30px;
             padding: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
           }
 
           .contact-info {
@@ -1124,7 +1138,7 @@ const App: React.FC = () => {
           }
 
           .contact-info p {
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 2rem;
             line-height: 1.6;
           }
@@ -1137,33 +1151,40 @@ const App: React.FC = () => {
 
           .contact-detail-item {
             display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
+            align-items: center;
+            gap: 1rem;
+          }
+
+          .contact-detail-icon {
+            color: #fff;
+            flex-shrink: 0;
           }
 
           .contact-detail-item strong {
-            color: #667eea;
+            color: #fff;
             font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.25rem;
           }
 
           .contact-detail-item a,
           .contact-detail-item span {
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             transition: color 0.3s ease;
           }
 
           .contact-detail-item a:hover {
-            color: #667eea;
+            color: #fff;
           }
 
           .availability-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 50px;
-            color: #10b981 !important;
+            color: #fff !important;
             font-size: 0.75rem;
           }
 
@@ -1196,9 +1217,9 @@ const App: React.FC = () => {
             width: 100%;
             padding: 0.75rem 1rem;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
@@ -1207,23 +1228,23 @@ const App: React.FC = () => {
           .form-input:focus,
           .form-textarea:focus {
             outline: none;
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
           }
 
           .form-input:hover,
           .form-textarea:hover {
-            border-color: rgba(102, 126, 234, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
           }
 
           .form-input::placeholder,
           .form-textarea::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.5);
           }
 
           .form-error {
-            color: #ef4444;
+            color: #ff6b6b;
             margin-top: 0.5rem;
             font-size: 0.875rem;
             text-align: center;
@@ -1231,11 +1252,11 @@ const App: React.FC = () => {
 
           /* Footer */
           .footer {
-            background: #05070a;
+            background: rgba(0, 0, 0, 0.2);
             padding: 3rem 0;
             text-align: center;
-            color: #9ca3af;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
           }
 
           .footer p {
@@ -1250,18 +1271,14 @@ const App: React.FC = () => {
           }
 
           .footer-links a {
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             transition: color 0.3s ease;
             font-size: 0.875rem;
           }
 
           .footer-links a:hover {
-            color: #667eea;
-          }
-
-          .text-center {
-            text-align: center;
+            color: #fff;
           }
 
           /* Media Queries */
@@ -1278,21 +1295,8 @@ const App: React.FC = () => {
               display: none !important;
             }
             
-            .about-section {
-              flex-direction: row;
-              text-align: left;
-            }
-
             .about-heading {
               font-size: 3rem;
-            }
-
-            .stats-container {
-              justify-content: flex-start;
-            }
-
-            .social-links {
-              justify-content: flex-start;
             }
           }
 
@@ -1333,6 +1337,11 @@ const App: React.FC = () => {
 
             .form-row {
               grid-template-columns: 1fr;
+            }
+
+            .contact-info-cards {
+              flex-direction: column;
+              align-items: center;
             }
           }
         `}
